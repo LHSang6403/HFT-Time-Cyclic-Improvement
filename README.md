@@ -16,4 +16,6 @@ The evaluation encompasses two core predictive tasks:
 
 - **Regression Task**: Minute-ahead price prediction
 
-- **Classification Task**: Short-term market trend prediction\\
+- **Classification Task**: Short-term market trend prediction
+
+Authors: Hoang-Sang Le, Dinh-Chuong Vu, Hoang-Hai Pham, Duy-Hoang Tran

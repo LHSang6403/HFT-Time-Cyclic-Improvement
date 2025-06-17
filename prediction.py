@@ -1,17 +1,17 @@
-import pricePrediction
-import trendPrediction
+import price_prediction
+import trend_prediction
 
 
 def main():
     # Train and evaluate models for price prediction
-    for i in range(pricePrediction.NUM_MODELS):
-        for j in range(pricePrediction.NUM_FEATURE_SETS):
-            pricePrediction.pricePrediction(pricePrediction.MODEL_NAMES[i], i, j)
+    for i in range(price_prediction.NUM_MODELS):
+        for j in range(price_prediction.NUM_FEATURE_SETS):
+            price_prediction.pricePrediction(price_prediction.MODEL_NAMES[i], i, j)
 
     # Train and evaluate models for trend prediction
-    for i in range(trendPrediction.NUM_MODELS):
-        for j in range(trendPrediction.NUM_FEATURE_SETS):
-            trendPrediction.trendPrediction(trendPrediction.MODEL_NAMES[i], i, j)
+    for i in range(trend_prediction.NUM_MODELS):
+        for j in range(trend_prediction.NUM_FEATURE_SETS):
+            trend_prediction.trendPrediction(trend_prediction.MODEL_NAMES[i], i, j)
 
 if __name__ == "__main__":
     main()

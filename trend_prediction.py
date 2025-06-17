@@ -4,7 +4,7 @@ import numpy as np
 import os
 import torch
 import torch.optim as optim
-import trendModels as models
+import trend_models as models
 import torch.nn as nn
 from torch.utils.data import TensorDataset, DataLoader, WeightedRandomSampler
 from sklearn.metrics import accuracy_score

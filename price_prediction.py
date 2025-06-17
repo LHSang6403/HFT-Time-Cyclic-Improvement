@@ -11,7 +11,7 @@ import torch.nn as nn
 import torch.optim as optim
 import os
 import utils
-import priceModels as models
+import price_models as models
 
 NUM_MODELS = 3  # Number of models to train
 MODEL_NAMES = ['CNN', 'LSTM', 'CNNLSTM']  # Names of the models

@@ -6,7 +6,7 @@ from sklearn.preprocessing import MinMaxScaler
 # Hyperparameters
 TIME_STEPS = 20
 HORIZON = 15
-BATCH_SIZE = 512
+BATCH_SIZE = 64
 NUM_EPOCHS = 30
 EARLY_STOPPING_PATIENCE = 10
 LEARNING_RATE = 5e-4

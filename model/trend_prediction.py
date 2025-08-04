@@ -71,6 +71,7 @@ def name2model(modelName, feature_cols, device):
     elif modelName == 'LSTM':
         return models.LSTM(len(feature_cols), device)
 # --- Focal loss (no smoothing, no weight) ---
+# Using for handling hard patterns in trend prediction
 def focal_loss(inputs, targets, gamma=2.0):
     ce = nn.functional.cross_entropy(inputs, targets, reduction='none')
     pt = torch.exp(-ce)
@@ -112,6 +113,11 @@ def train(model, device, path, train_loader, test_loader, optimizer, scheduler, 
             torch.save(model.state_dict(), model_save_path)
             print(f"Saved LSTM model to {model_save_path}")
 
+        # Early stopping
+        if epoch > utils.EARLY_STOPPING_PATIENCE and val_loss > best_loss:
+            print(f"Early stopping at epoch {epoch}")
+            break
+
     print("Training finished.")
 
 
@@ -128,7 +134,7 @@ def evaluate(model, device, path, test_loader):
 
     # Direction accuracy
     print("classification accuracy:", accuracy_score(labels, preds))
-
+    print(labels)
     # Precision & Recall cho từng class: [0=flat, 1=up, 2=down]
     precision_per_class = precision_score(labels, preds, labels=[0,1,2], average=None, zero_division=0)
     recall_per_class    = recall_score   (labels, preds, labels=[0,1,2], average=None, zero_division=0)
@@ -142,6 +148,9 @@ def trendPrediction(modelName, i, j):
     # --- Model, optimizer, scheduler ---
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     model     = name2model(modelName, feature_cols, device)
+
+    # Sử dụng AdamW để cập nhật trọng số.
+    # Tự động điều chỉnh learning rate theo chu kỳ để tăng hiệu quả học.
     optimizer = optim.AdamW(model.parameters(),
                             lr=utils.LEARNING_RATE,
                             weight_decay=utils.WEIGHT_DECAY)

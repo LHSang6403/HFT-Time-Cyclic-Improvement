@@ -3,7 +3,7 @@ import torch.nn as nn
 # Hyperparameters
 TIME_STEPS = 20
 HORIZON = 15
-BATCH_SIZE = 512
+BATCH_SIZE = 64
 NUM_EPOCHS = 30
 EARLY_STOPPING_PATIENCE = 10
 LEARNING_RATE = 5e-4
@@ -16,15 +16,15 @@ class CNNLSTM(nn.Module):
         super(CNNLSTM, self).__init__()
         self.device = device
         self.cnn = nn.Sequential(
-            nn.Conv1d(in_channels=input_dim, out_channels=64, kernel_size=3, padding=1),
+            nn.Conv1d(in_channels=input_dim, out_channels=HIDDEN_SIZE, kernel_size=3, padding=1),
             nn.ReLU(),
             nn.MaxPool1d(kernel_size=2),
-            nn.Conv1d(in_channels=64, out_channels=128, kernel_size=3, padding=1),
+            nn.Conv1d(in_channels=HIDDEN_SIZE, out_channels=HIDDEN_SIZE * 2, kernel_size=3, padding=1),
             nn.ReLU(),
             nn.MaxPool1d(kernel_size=2)
         )
-        self.lstm = nn.LSTM(input_size=128, hidden_size=64, num_layers=1, batch_first=True)
-        self.fc = nn.Linear(64, 3)  # 3 classes: flat, up, down
+        self.lstm = nn.LSTM(input_size=HIDDEN_SIZE * 2, hidden_size=HIDDEN_SIZE, num_layers=1, batch_first=True)
+        self.fc = nn.Linear(HIDDEN_SIZE, 3)  # 3 classes: flat, up, down
 
     def forward(self, x):
         # CNN expects input in (batch_size, channels, sequence_length)
@@ -41,15 +41,15 @@ class CNN(nn.Module):
         super(CNN, self).__init__()
         self.device = device
         self.cnn = nn.Sequential(
-            nn.Conv1d(in_channels=input_dim, out_channels=64, kernel_size=3, padding=1),
+            nn.Conv1d(in_channels=input_dim, out_channels=HIDDEN_SIZE, kernel_size=3, padding=1),
             nn.ReLU(),
             nn.MaxPool1d(kernel_size=2),
-            nn.Conv1d(in_channels=64, out_channels=128, kernel_size=3, padding=1),
+            nn.Conv1d(in_channels=HIDDEN_SIZE, out_channels=HIDDEN_SIZE * 2, kernel_size=3, padding=1),
             nn.ReLU(),
             nn.MaxPool1d(kernel_size=2),
             nn.Flatten()
         )
-        self.fc = nn.Linear(128 * (TIME_STEPS // 4), 3)  # Adjust based on CNN output size
+        self.fc = nn.Linear(HIDDEN_SIZE * 2 * (TIME_STEPS // 4), 3)  # Adjust based on CNN output size
 
     def forward(self, x):
         # CNN expects input in (batch_size, channels, sequence_length)
